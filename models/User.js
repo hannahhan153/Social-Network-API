@@ -26,8 +26,20 @@ const UserSchema = new Schema({
         ref: "User" 
        }
 ]
-  });
+  },
+  {
+      toJSON: {
+          virtuals: true,
+      },
+      id: false
+  }
+  );
 
-const User = module('User', UserSchema);
+// get total count of thoughts on retrieval
+UserSchema.virtual('thoughtCount').get(function() {
+    return this.thoughts.length;
+})
+
+const User = model('User', UserSchema);
 
 module.exports = User;

@@ -1,6 +1,7 @@
-const reactionSchema = require("./Reaction");
+const { Schema, model } = require('mongoose');
 
-const thoughtSchema = new Schema({
+const ReactionSchema = require('./Reaction');
+const ThoughtSchema = new Schema({
     thoughtText: {
         type: String,
         required: true,
@@ -20,16 +21,35 @@ const thoughtSchema = new Schema({
         ref: 'User'
     },
     reactions: 
-    [reactionSchema]
+    [
+        {
+            type: Schema.Types.ObjectId,
+            ref: "Reaction"
+        }
+    ],
+    friends: [
+        // array of _id values referencing the User model (self-reference)
+               { type: Schema.Types.ObjectId,
+                ref: "User" 
+               }
+        ]
     // array of nested documents created with reactionSchema
     
-});
+},
+
+{
+    toJSON: {
+        virtuals: true,
+    },
+    id: false
+}
+);
 
 // create a virtual called friendCount that retrieves the length of user's friends array field on query
-thoughtSchema.virtual('friendCount').get(function() {
-    
+ThoughtSchema.virtual('friendCount').get(function() {
+    return this.friends.length;
 })
 
-const Thought = model('Thought', thoughtSchema);
+const Thought = model('Thought', ThoughtSchema);
 
-module.exports = thoughtSchema
+module.exports = Thought;
