@@ -1,16 +1,17 @@
-const { ObjectId } = require("bson");
-const { default: mongoose } = require("mongoose");
+
+const { Schema, Types } = require("mongoose");
 
 const reactionSchema = new Schema ({
-    // create a virtual called reactionCount that retrieves the length of the thought's reactions array field on query
+    
     reactionId: {
-        type: mongoose.Schema.Types.ObjectId,
-        default: new ObjectId
+        type: Schema.Types.ObjectId,
+        default: () => new Types.ObjectId(),
     },
     reactionBody: {
         type: String,
         required: true,
         // 280 character maximum
+        maxlength: 280
     },
     username: {
         type: String,
@@ -21,4 +22,10 @@ const reactionSchema = new Schema ({
         default: Date.now,
         // use a getter method to format the timestamp on query
     }
-})
+});
+
+// create a virtual called reactionCount that retrieves the length of the thought's reactions array field on query
+
+const Reaction = model('Reaction', reactionSchema);
+
+module.exports = reactionSchema;
