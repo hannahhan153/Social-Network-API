@@ -25,5 +25,10 @@ THEN I am able to successfully create and delete reactions to thoughts and add a
 
 ## Walkthrough Video and GitHub Repo
 Link to Walkthrough Video:
+Part One
+https://drive.google.com/file/d/1chnRLwj1E85XxLKku3BC6DfqF1EyClaM/view
+Part Two
+https://drive.google.com/file/d/1fU8UAlTBz5zPG2BCC-ccCVy35vlJkTTu/view
 
 Link to GitHub Repo:
+https://github.com/hannahhan153/Social-Network-API 
