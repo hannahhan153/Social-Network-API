@@ -1,5 +1,7 @@
 const { Schema, model } = require('mongoose');
 
+const friendSchema = require('./Friend');
+
 const UserSchema = new Schema({
     username: {
       type: String,
@@ -20,12 +22,9 @@ const UserSchema = new Schema({
         ref: 'Thought'
     }
     ],
-    friends: [
+    friends: [friendSchema]
 // array of _id values referencing the User model (self-reference)
-       { type: Schema.Types.ObjectId,
-        ref: "User" 
-       }
-]
+
   },
   {
       toJSON: {
@@ -38,6 +37,11 @@ const UserSchema = new Schema({
 // get total count of thoughts on retrieval
 UserSchema.virtual('thoughtCount').get(function() {
     return this.thoughts.reduce((total, thought) => total + thought.reactions.length + 1, 0);
+})
+
+// create a virtual called friendCount that retrieves the length of user's friends array field on query
+UserSchema.virtual('friendCount').get(function() {
+    return this.friends.length;
 })
 
 const User = model('User', UserSchema);

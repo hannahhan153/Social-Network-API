@@ -45,6 +45,30 @@ const userController = {
         .then(dbUserData => res.json(dbUserData))
         .catch(err => res.status(400).json(err));
     },
+    addFriend({ params, body }, res) {
+        console.log("LINE 25!!!!!!!!!!!!!!!!!!")
+        User.create(
+            { _id: params.userId },
+            { $push: {
+                friends: body
+            } },
+            { new: true }
+        )
+        .populate({
+            path: 'thoughts',
+            select: '-__v'
+        })
+        .select('-__v')
+        .sort({ _id: -1 })
+        .then(dbUserData => {
+            if (!dbUserData) {
+                res.status(404).json({ message: 'No user found with this id!' });
+                return;
+            }
+            res.json(dbUserData);
+        })
+        .catch(err => res.json(err));
+    },
 
     // update User by id
     updateUser({ params, body}, res) {
@@ -64,12 +88,27 @@ const userController = {
         User.findOneAndDelete({ _id: params.id })
         .then(dbUserData => {
             if (!dbUserData) {
-                res.status(404).json({ message: 'No pizza found with this id!' });
+                res.status(404).json({ message: 'No user found with this id!' });
                 return;
             }
             res.json(dbUserData);
         })
         .catch(err => res.status(400).json(err));
+    },
+    removeFriend({ params }, res) {
+        User.findOneAndUpdate(
+            { _id: params.userId },
+            { $pull: { friends: {friendId: params.friendId } } },
+            { new: true }
+        )
+        .populate({
+            path: 'thoughts',
+            select: '-__v'
+        })
+        .select('-__v')
+        .sort({ _id: -1 })
+        .then(dbUserData => res.json(dbUserData))
+        .catch(err => res.json(err));
     }
 }
 

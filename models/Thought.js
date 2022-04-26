@@ -1,7 +1,8 @@
-const dateFormat = require('../utils/dateFormat');
 const { Schema, model } = require('mongoose');
+const dateFormat = require('../utils/dateFormat');
 
-const ReactionSchema = require('./Reaction');
+const reactionSchema = require('./Reaction');
+
 const ThoughtSchema = new Schema({
     thoughtText: {
         type: String,
@@ -22,23 +23,8 @@ const ThoughtSchema = new Schema({
         required: true,
         ref: 'User'
     },
-    reactions: 
-    [
-        {
-            type: Schema.Types.ObjectId,
-            ref: "Reaction"
-        }
-    ],
-    friends: [
-        // array of _id values referencing the User model (self-reference)
-               { type: Schema.Types.ObjectId,
-                ref: "User" 
-               }
-        ]
-    // array of nested documents created with reactionSchema
-    
+    reactions: [reactionSchema]
 },
-
 {
     toJSON: {
         virtuals: true,
@@ -48,10 +34,11 @@ const ThoughtSchema = new Schema({
 }
 );
 
-// create a virtual called friendCount that retrieves the length of user's friends array field on query
-ThoughtSchema.virtual('friendCount').get(function() {
-    return this.friends.length;
+// create a virtual called reactionCount that retrieves the length of the thought's reactions array field on query
+ThoughtSchema.virtual('reactionCount').get(function() {
+    return this.reactions.length;
 })
+
 
 const Thought = model('Thought', ThoughtSchema);
 
