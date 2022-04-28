@@ -18,11 +18,11 @@ router
 
 // Set up POST and DELETE at /api/users/:id/friends/friend:id
 router
-    .route('/:id/friends')
-    .post(addFriend)
+    .route('/:id/friends/:friendId')
+    .put(addFriend)
 router
     .route('/:id/friends/:friendId')
-    .delete(removeFriend);
+.delete(removeFriend);
 
 // Set up GET one, PUT, and DELETE at /api/users/:id
 router
